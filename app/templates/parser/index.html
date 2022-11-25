@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block app_content %}
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <table class="table table-hover align-middle">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Заголовок</th>
+                    <th scope="col">Путь</th>
+                    <th scope="col">Обработана</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for link in links %}
+                    <tr>
+                        <th scope="row">{{ link.id }}</th>
+                        <td>{{ link.title }}</td>
+                        <td><a href="https://ru.wikipedia.org{{ link.path }}" target="_blank">https://ru.wikipedia.org{{ link.path }}</a></td>
+                        <td>{{ link.author.username }}</td>
+                        <td>
+                            {% if link.is_parsed %}
+                                <span class="badge text-bg-primary">ДА</span>
+                            {% else %}
+                                <span class="badge text-bg-danger">НЕТ</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if link.is_parsed %}
+                                <a href="{{ url_for('parser.view', page_id=link.page.id) }}" class="btn btn-outline-primary btn-sm">Открыть страницу </a>
+
+                            {% else %}
+                                <a href="{{ url_for('parser.read_page', link_id=link.id) }}" class="btn btn-outline-primary btn-sm">Собрать данные</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <nav aria-label="nav" class="mt-2">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item {% if not prev_link %}disabled{% endif %}">
+                        <a class="page-link" href="{{ prev_link }}">Предыдущая</a>
+                    </li>
+                    <li class="page-item {% if not next_link %}disabled{% endif %}">
+                        <a class="page-link" href="{{ next_link }}">Следующая</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+{% endblock %}
